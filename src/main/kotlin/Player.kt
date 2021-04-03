@@ -19,7 +19,7 @@ class Player : Entity {
     }
 
     override fun render(batch: SpriteBatch) {
-        batch.draw(sprite, dimension.x, dimension.y);
+        batch.draw(sprite, dimension.x - dimension.width/2, dimension.y - dimension.height/2)
     }
 
     override fun update() {
