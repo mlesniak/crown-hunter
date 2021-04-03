@@ -103,17 +103,6 @@ class Game : ApplicationListener {
         if (pressed) {
             body.linearVelocity = veloc
         }
-
-        if (Gdx.input.isKeyJustPressed(Input.Keys.F)) {
-            fullscreen = !fullscreen
-            if (fullscreen) {
-                Gdx.graphics.setFullscreenMode(Gdx.graphics.displayMode)
-                batch.projectionMatrix.setToOrtho2D(0f, 0f, Gdx.graphics.width.toFloat(), Gdx.graphics.height.toFloat())
-                Gdx.gl.glViewport(0, 0, Gdx.graphics.backBufferWidth, Gdx.graphics.backBufferHeight)
-            } else {
-                Gdx.graphics.setWindowedMode(800, 600)
-            }
-        }
     }
 
     override fun pause() {
