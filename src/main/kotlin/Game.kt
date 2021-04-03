@@ -29,7 +29,7 @@ class Game : ApplicationListener {
             player
         )
 
-        world = World(Vector2(0f, -98f), true)
+        world = World(Vector2(0f, -400f), true)
         val bodyDef = BodyDef()
         bodyDef.type = BodyDef.BodyType.DynamicBody
         bodyDef.position.set(player.dimension.x, player.dimension.y)
@@ -40,8 +40,21 @@ class Game : ApplicationListener {
         val fixtureDef = FixtureDef()
         fixtureDef.shape = shape
         fixtureDef.density = 1f
-        val fixture = body.createFixture(fixtureDef)
+        body.createFixture(fixtureDef)
         shape.dispose()
+
+        // Add floor
+        val floor = BodyDef()
+        floor.type = BodyDef.BodyType.StaticBody
+        floor.position.set(400f, -12f)
+        val floorBody = world.createBody(floor)
+
+        val floorShape = PolygonShape()
+        floorShape.setAsBox(800f, 1f)
+        val floorFixture = FixtureDef()
+        floorFixture.shape = floorShape
+        floorBody.createFixture(floorFixture)
+        floorShape.dispose()
     }
 
     override fun render() {

@@ -11,7 +11,7 @@ class Player : Entity {
         sprite = Texture(Gdx.files.internal("assets/sprite.png"))
         dimension = Rectangle()
         dimension.x = 800f / 2 - 64 / 2
-        dimension.y = 400f
+        dimension.y = 100f
         dimension.width = 32f
         dimension.height = 32f
     }
