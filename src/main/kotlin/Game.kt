@@ -18,6 +18,8 @@ class Game : ApplicationListener {
     private lateinit var body: Body
     private lateinit var player: Player
 
+    val PIXEL_TO_METER = 100f
+
     override fun create() {
         camera = OrthographicCamera()
         camera.setToOrtho(false, 800f, 600f)
@@ -28,29 +30,29 @@ class Game : ApplicationListener {
             player
         )
 
-        world = World(Vector2(0f, -400f), true)
+        world = World(Vector2(0f, -98f), true)
         val bodyDef = BodyDef()
         bodyDef.type = BodyDef.BodyType.DynamicBody
-        bodyDef.position.set(player.dimension.x, player.dimension.y)
+        bodyDef.position.set(player.dimension.x / PIXEL_TO_METER, player.dimension.y / PIXEL_TO_METER)
         body = world.createBody(bodyDef)
 
         val shape = PolygonShape()
-        shape.setAsBox(player.dimension.getWidth() / 2, player.dimension.getHeight() / 2)
+        shape.setAsBox(player.dimension.getWidth() / 2/ PIXEL_TO_METER, player.dimension.getHeight() / 2 / PIXEL_TO_METER)
         val bodyFixture = FixtureDef()
         bodyFixture.shape = shape
-        bodyFixture.density = 50f
-        bodyFixture.restitution = 0.9f
+        bodyFixture.density = 1f
+        bodyFixture.restitution = 0.4f
         body.createFixture(bodyFixture)
         shape.dispose()
 
         // Add floor
         val floor = BodyDef()
         floor.type = BodyDef.BodyType.StaticBody
-        floor.position.set(400f, -12f)
+        floor.position.set(400f / PIXEL_TO_METER, -12f / PIXEL_TO_METER)
         val floorBody = world.createBody(floor)
 
         val floorShape = PolygonShape()
-        floorShape.setAsBox(800f, 1f)
+        floorShape.setAsBox(800f / PIXEL_TO_METER, 1f / PIXEL_TO_METER)
         val floorFixture = FixtureDef()
         floorFixture.shape = floorShape
         floorBody.createFixture(floorFixture)
@@ -59,7 +61,7 @@ class Game : ApplicationListener {
 
     override fun render() {
         world.step(Gdx.graphics.deltaTime, 6, 2);
-        player.dimension.setPosition(body.position.x, body.position.y);
+        player.dimension.setPosition(body.position.x * PIXEL_TO_METER, body.position.y * PIXEL_TO_METER);
 
         ScreenUtils.clear(0.2f, 0.2f, 0.2f, 1f)
         camera.update()
@@ -72,23 +74,25 @@ class Game : ApplicationListener {
             Gdx.app.exit()
         }
 
+        val veloc = body.linearVelocity
         var pressed = false
-        var dx = 0f
-        var dy = 0f
         if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            dy += 60000f
-            pressed = true
+            val y = body.position.y * PIXEL_TO_METER
+            if (y < 7) {
+                veloc.y += 20f
+                pressed = true
+            }
         }
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            dx += 10000f
+            veloc.x += 1f
             pressed = true
         }
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            dx -= 10000f
+            veloc.x -= 1f
             pressed = true
         }
         if (pressed) {
-            body.setLinearVelocity(dx, dy)
+            body.linearVelocity = veloc
         }
     }
 
