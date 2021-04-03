@@ -4,20 +4,20 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Rectangle
 
 class Player : Entity {
-    private var sprite: Texture
-    private var bucket: Rectangle
+    var sprite: Texture
+    var dimension: Rectangle
 
     init {
         sprite = Texture(Gdx.files.internal("assets/sprite.png"))
-        bucket = Rectangle()
-        bucket.x = 800f / 2 - 64 / 2
-        bucket.y = 20f
-        bucket.width = 32f
-        bucket.height = 32f
+        dimension = Rectangle()
+        dimension.x = 800f / 2 - 64 / 2
+        dimension.y = 400f
+        dimension.width = 32f
+        dimension.height = 32f
     }
 
     override fun render(batch: SpriteBatch) {
-        batch.draw(sprite, bucket.x, bucket.y);
+        batch.draw(sprite, dimension.x, dimension.y);
     }
 
     override fun update() {

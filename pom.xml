@@ -73,11 +73,20 @@
             <classifier>natives-desktop</classifier>
         </dependency>
         <dependency>
+            <groupId>com.badlogicgames.gdx</groupId>
+            <artifactId>gdx-box2d</artifactId>
+            <version>${gdx.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.badlogicgames.gdx-controllers</groupId>
             <artifactId>gdx-controllers-desktop</artifactId>
             <version>${gdx.controller.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.badlogicgames.gdx-controllers</groupId>
+            <artifactId>gdx-controllers-core</artifactId>
+            <version>${gdx.controller.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
