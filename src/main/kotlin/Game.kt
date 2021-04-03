@@ -18,6 +18,8 @@ class Game : ApplicationListener {
     private lateinit var body: Body
     private lateinit var player: Player
 
+    private var fullscreen = false
+
     // Instead of having 1 pixel equals to 1meter we have 100pixel equals to 1meter.
     // When converting to Box2d, divide, when converting from, multiply.
     val PIXEL_TO_METER = 100f
@@ -39,18 +41,22 @@ class Game : ApplicationListener {
         body = world.createBody(bodyDef)
 
         val shape = PolygonShape()
-        shape.setAsBox(player.dimension.getWidth() / 2/ PIXEL_TO_METER, player.dimension.getHeight() / 2 / PIXEL_TO_METER)
+        shape.setAsBox(
+            player.dimension.getWidth() / 2 / PIXEL_TO_METER,
+            player.dimension.getHeight() / 2 / PIXEL_TO_METER
+        )
         val bodyFixture = FixtureDef()
         bodyFixture.shape = shape
         bodyFixture.density = 1f
-        bodyFixture.restitution = 0.4f
+        bodyFixture.restitution = 0f
+        bodyFixture.friction = 1f
         body.createFixture(bodyFixture)
         shape.dispose()
 
         // Add floor
         val floor = BodyDef()
         floor.type = BodyDef.BodyType.StaticBody
-        floor.position.set(400f / PIXEL_TO_METER, -12f / PIXEL_TO_METER)
+        floor.position.set(400f / PIXEL_TO_METER, 0f / PIXEL_TO_METER)
         val floorBody = world.createBody(floor)
 
         val floorShape = PolygonShape()
@@ -62,8 +68,8 @@ class Game : ApplicationListener {
     }
 
     override fun render() {
-        world.step(Gdx.graphics.deltaTime, 6, 2);
-        player.dimension.setPosition(body.position.x * PIXEL_TO_METER, body.position.y * PIXEL_TO_METER);
+        world.step(Gdx.graphics.deltaTime, 6, 2)
+        player.dimension.setPosition(body.position.x * PIXEL_TO_METER, body.position.y * PIXEL_TO_METER)
 
         ScreenUtils.clear(0.2f, 0.2f, 0.2f, 1f)
         camera.update()
@@ -80,7 +86,8 @@ class Game : ApplicationListener {
         var pressed = false
         if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
             val y = body.position.y * PIXEL_TO_METER
-            if (y < 7) {
+            println(y)
+            if (y < 19) {
                 veloc.y += 20f
                 pressed = true
             }
@@ -95,6 +102,17 @@ class Game : ApplicationListener {
         }
         if (pressed) {
             body.linearVelocity = veloc
+        }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F)) {
+            fullscreen = !fullscreen
+            if (fullscreen) {
+                Gdx.graphics.setFullscreenMode(Gdx.graphics.displayMode)
+                batch.projectionMatrix.setToOrtho2D(0f, 0f, Gdx.graphics.width.toFloat(), Gdx.graphics.height.toFloat())
+                Gdx.gl.glViewport(0, 0, Gdx.graphics.backBufferWidth, Gdx.graphics.backBufferHeight)
+            } else {
+                Gdx.graphics.setWindowedMode(800, 600)
+            }
         }
     }
 
