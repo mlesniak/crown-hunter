@@ -8,4 +8,4 @@ fun main() {
     config.width = 800
     config.height = 600
     LwjglApplication(GameDemo(), config)
-}
+ }
