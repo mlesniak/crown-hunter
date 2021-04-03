@@ -18,6 +18,8 @@ class Game : ApplicationListener {
     private lateinit var body: Body
     private lateinit var player: Player
 
+    // Instead of having 1 pixel equals to 1meter we have 100pixel equals to 1meter.
+    // When converting to Box2d, divide, when converting from, multiply.
     val PIXEL_TO_METER = 100f
 
     override fun create() {
