@@ -18,7 +18,6 @@ class Game : ApplicationListener {
     private lateinit var body: Body
     private lateinit var player: Player
 
-
     override fun create() {
         camera = OrthographicCamera()
         camera.setToOrtho(false, 800f, 600f)
@@ -37,10 +36,11 @@ class Game : ApplicationListener {
 
         val shape = PolygonShape()
         shape.setAsBox(player.dimension.getWidth() / 2, player.dimension.getHeight() / 2)
-        val fixtureDef = FixtureDef()
-        fixtureDef.shape = shape
-        fixtureDef.density = 1f
-        body.createFixture(fixtureDef)
+        val bodyFixture = FixtureDef()
+        bodyFixture.shape = shape
+        bodyFixture.density = 50f
+        bodyFixture.restitution = 0.9f
+        body.createFixture(bodyFixture)
         shape.dispose()
 
         // Add floor
@@ -70,6 +70,25 @@ class Game : ApplicationListener {
 
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
             Gdx.app.exit()
+        }
+
+        var pressed = false
+        var dx = 0f
+        var dy = 0f
+        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+            dy += 60000f
+            pressed = true
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+            dx += 10000f
+            pressed = true
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+            dx -= 10000f
+            pressed = true
+        }
+        if (pressed) {
+            body.setLinearVelocity(dx, dy)
         }
     }
 
