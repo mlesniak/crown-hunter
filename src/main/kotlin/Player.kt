@@ -9,8 +9,10 @@ class Player : Entity {
 
     init {
         sprite = Texture(Gdx.files.internal("assets/sprite.png"))
+
         dimension = Rectangle()
-        dimension.x = 800f / 2 - 64 / 2
+
+        dimension.x = 800f / 2
         dimension.y = 100f
         dimension.width = 32f
         dimension.height = 32f
@@ -21,16 +23,9 @@ class Player : Entity {
     }
 
     override fun update() {
-        // if (Gdx.input.isTouched) {
-        //     val touchPos = Vector3()
-        //     touchPos.set(Gdx.input.x.toFloat(), Gdx.input.y.toFloat(), 0f)
-        //     camera.unproject(touchPos)
-        //     bucket.x = touchPos.x - 64 / 2
-        // }
     }
 
     fun dispose() {
-        // When do we call this?
         sprite.dispose()
     }
 }

@@ -4,10 +4,13 @@ import com.badlogic.gdx.Input
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.physics.box2d.*
+import com.badlogic.gdx.physics.box2d.Body
+import com.badlogic.gdx.physics.box2d.BodyDef
+import com.badlogic.gdx.physics.box2d.EdgeShape
+import com.badlogic.gdx.physics.box2d.FixtureDef
+import com.badlogic.gdx.physics.box2d.PolygonShape
+import com.badlogic.gdx.physics.box2d.World
 import com.badlogic.gdx.utils.ScreenUtils
-
-// import com.badlogic.gdx.physics.box2d.*;
 
 class Game : ApplicationListener {
     private lateinit var camera: OrthographicCamera
@@ -42,8 +45,8 @@ class Game : ApplicationListener {
 
         val shape = PolygonShape()
         shape.setAsBox(
-            player.dimension.getWidth() / 2 / PIXEL_TO_METER,
-            player.dimension.getHeight() / 2 / PIXEL_TO_METER
+            player.dimension.getWidth()/ PIXEL_TO_METER / 2 ,
+            player.dimension.getHeight()/ PIXEL_TO_METER / 2
         )
         val bodyFixture = FixtureDef()
         bodyFixture.shape = shape
@@ -53,14 +56,17 @@ class Game : ApplicationListener {
         body.createFixture(bodyFixture)
         shape.dispose()
 
+        // TODO(mlesniak) correct floor
         // Add floor
         val floor = BodyDef()
         floor.type = BodyDef.BodyType.StaticBody
         floor.position.set(400f / PIXEL_TO_METER, 0f / PIXEL_TO_METER)
         val floorBody = world.createBody(floor)
 
-        val floorShape = PolygonShape()
-        floorShape.setAsBox(800f / PIXEL_TO_METER, 1f / PIXEL_TO_METER)
+        // val floorShape = PolygonShape()
+        // floorShape.setAsBox(80000f / PIXEL_TO_METER, 0 / PIXEL_TO_METER)
+        val floorShape = EdgeShape()
+        floorShape.set(-10000f,0f, 10000f,0f)
         val floorFixture = FixtureDef()
         floorFixture.shape = floorShape
         floorBody.createFixture(floorFixture)
@@ -86,7 +92,6 @@ class Game : ApplicationListener {
         var pressed = false
         if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
             val y = body.position.y * PIXEL_TO_METER
-            println(y)
             if (y < 19) {
                 veloc.y += 20f
                 pressed = true
@@ -102,6 +107,13 @@ class Game : ApplicationListener {
         }
         if (pressed) {
             body.linearVelocity = veloc
+        }
+
+        if (body.position.x * PIXEL_TO_METER < 0) {
+            body.setTransform((Gdx.graphics.width.toFloat() / PIXEL_TO_METER), body.position.y, 0f)
+        }
+        if (body.position.x * PIXEL_TO_METER> Gdx.graphics.width) {
+            body.setTransform(0f, body.position.y, 0f)
         }
     }
 
