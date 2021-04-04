@@ -40,7 +40,7 @@ class Game : ApplicationListener {
                     var pressed = false
                     if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
                         val y = body.position.y * GameWorld.PIXEL_TO_METER
-                        if (y < 19) {
+                        if (velocity.y < 0.001) {
                             velocity.y += 20f
                             pressed = true
                         }
@@ -66,7 +66,9 @@ class Game : ApplicationListener {
                 }
             },
 
-            Sprite("assets/sprite2.png", Vector2(200f, 100f), BodyDef.BodyType.StaticBody)
+            Sprite("assets/sprite2.png", Vector2(200f, 100f), BodyDef.BodyType.StaticBody),
+            Sprite("assets/sprite2.png", Vector2(400f, 200f), BodyDef.BodyType.StaticBody),
+            Sprite("assets/sprite2.png", Vector2(600f, 300f), BodyDef.BodyType.StaticBody),
         )
 
         // Add floor
