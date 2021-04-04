@@ -12,13 +12,17 @@ import com.badlogic.gdx.physics.box2d.FixtureDef
 import com.badlogic.gdx.physics.box2d.World
 import com.badlogic.gdx.utils.ScreenUtils
 
+object GameWorld {
+    // Instead of having 1 pixel equals to 1meter we have 100pixel equals to 1meter.
+    // When converting to Box2d, divide, when converting from, multiply.
+    val PIXEL_TO_METER = 100f
+    val world: World = World(Vector2(0f, -98f), true)
+}
+
 class Game : ApplicationListener {
     private lateinit var camera: OrthographicCamera
     private lateinit var batch: SpriteBatch
     private lateinit var entites: List<Entity>
-
-    private lateinit var world: World
-    private lateinit var player: Player
 
     var debugRenderer: Box2DDebugRenderer? = null
     var debugMatrix: Matrix4? = null
@@ -28,55 +32,62 @@ class Game : ApplicationListener {
         camera.setToOrtho(false, 800f, 600f)
         batch = SpriteBatch()
 
-        world = World(Vector2(0f, -98f), true)
-
         entites = mutableListOf(
-            Player(world, "assets/sprite.png", 400f, 100f, BodyDef.BodyType.DynamicBody, 32f),
-            Player(world, "assets/sprite2.png", 200f, 100f, BodyDef.BodyType.StaticBody, 100f)
+            object: Sprite("assets/sprite.png", Vector2(400f, 100f), BodyDef.BodyType.DynamicBody) {
+                override fun update() {
+                    dimension.setPosition(body.position.x * GameWorld.PIXEL_TO_METER, body.position.y * GameWorld.PIXEL_TO_METER)
+                    val velocity = body.linearVelocity
+                    var pressed = false
+                    if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+                        val y = body.position.y * GameWorld.PIXEL_TO_METER
+                        if (y < 19) {
+                            velocity.y += 20f
+                            pressed = true
+                        }
+                    }
+                    if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+                        velocity.x += 1f
+                        pressed = true
+                    }
+                    if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+                        velocity.x -= 1f
+                        pressed = true
+                    }
+                    if (pressed) {
+                        body.linearVelocity = velocity
+                    }
+
+                    if (body.position.x * GameWorld.PIXEL_TO_METER < 0) {
+                        body.setTransform((Gdx.graphics.width.toFloat() / GameWorld.PIXEL_TO_METER), body.position.y, 0f)
+                    }
+                    if (body.position.x * GameWorld.PIXEL_TO_METER > Gdx.graphics.width) {
+                        body.setTransform(0f, body.position.y, 0f)
+                    }
+                }
+            },
+
+            Sprite("assets/sprite2.png", Vector2(200f, 100f), BodyDef.BodyType.StaticBody)
         )
-
-
-        // val bodyDef = BodyDef()
-        // bodyDef.type = BodyDef.BodyType.DynamicBody
-        // bodyDef.position.set(player.dimension.x / PIXEL_TO_METER, player.dimension.y / PIXEL_TO_METER)
-        // body = world.createBody(bodyDef)
-        //
-        // val shape = PolygonShape()
-        // shape.setAsBox(
-        //     player.dimension.getWidth()/ PIXEL_TO_METER / 2 ,
-        //     player.dimension.getHeight()/ PIXEL_TO_METER / 2
-        // )
-        // val bodyFixture = FixtureDef()
-        // bodyFixture.shape = shape
-        // bodyFixture.density = 1f
-        // bodyFixture.restitution = 0f
-        // bodyFixture.friction = 1f
-        // body.createFixture(bodyFixture)
-        // shape.dispose()
 
         // Add floor
         val floor = BodyDef()
         floor.type = BodyDef.BodyType.StaticBody
-        floor.position.set(400f / Companion.PIXEL_TO_METER, 0f / Companion.PIXEL_TO_METER)
-        val floorBody = world.createBody(floor)
-
-        // val floorShape = PolygonShape()
-        // floorShape.setAsBox(80000f / PIXEL_TO_METER, 0 / PIXEL_TO_METER)
+        floor.position.set(400f / GameWorld.PIXEL_TO_METER, 0f / GameWorld.PIXEL_TO_METER)
+        val floorBody = GameWorld.world.createBody(floor)
         val floorShape = EdgeShape()
-        floorShape.set(-10000f,0f, 10000f,0f)
+        floorShape.set(-10000f, 0f, 10000f, 0f)
         val floorFixture = FixtureDef()
         floorFixture.shape = floorShape
         floorBody.createFixture(floorFixture)
         floorShape.dispose()
 
-        debugMatrix= Matrix4(camera.combined)
-        debugMatrix!!.scale(Companion.PIXEL_TO_METER, Companion.PIXEL_TO_METER, 1f)
+        debugMatrix = Matrix4(camera.combined)
+        debugMatrix!!.scale(GameWorld.PIXEL_TO_METER, GameWorld.PIXEL_TO_METER, 1f)
         debugRenderer = Box2DDebugRenderer()
     }
 
     override fun render() {
-
-        world.step(Gdx.graphics.deltaTime, 6, 2)
+        GameWorld.world.step(Gdx.graphics.deltaTime, 6, 2)
         entites.forEach { it.update() }
 
         ScreenUtils.clear(0.2f, 0.2f, 0.2f, 1f)
@@ -90,8 +101,6 @@ class Game : ApplicationListener {
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
             Gdx.app.exit()
         }
-
-
     }
 
     override fun pause() {
@@ -104,12 +113,5 @@ class Game : ApplicationListener {
     }
 
     override fun dispose() {
-        batch.dispose()
-    }
-
-    companion object {
-        // Instead of having 1 pixel equals to 1meter we have 100pixel equals to 1meter.
-        // When converting to Box2d, divide, when converting from, multiply.
-        val PIXEL_TO_METER = 100f
     }
 }
