@@ -30,9 +30,9 @@ class Game : ApplicationListener {
 
         world = World(Vector2(0f, -98f), true)
 
-        player = Player(world)
         entites = mutableListOf(
-            player
+            Player(world, "assets/sprite.png", 400f, 100f, BodyDef.BodyType.DynamicBody),
+            Player(world, "assets/sprite2.png", 200f, 100f, BodyDef.BodyType.StaticBody)
         )
 
 

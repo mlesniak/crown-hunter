@@ -15,20 +15,21 @@ class Player : Entity {
 
     private lateinit var body: Body
 
-    constructor(world: World) {
-        sprite = Texture(Gdx.files.internal("assets/sprite.png"))
+    constructor(world: World, texture: String, x: Float, y: Float, type: BodyDef.BodyType) {
+        sprite = Texture(Gdx.files.internal(texture))
 
         dimension = Rectangle()
 
-        dimension.x = 800f / 2
-        dimension.y = 100f
+        dimension.x = x
+        dimension.y = y
         dimension.width = 32f
         dimension.height = 32f
 
         val bodyDef = BodyDef()
-        bodyDef.type = BodyDef.BodyType.DynamicBody
+        bodyDef.type = type
         bodyDef.position.set(dimension.x / Game.PIXEL_TO_METER, dimension.y / Game.PIXEL_TO_METER)
         body = world.createBody(bodyDef)
+        body.userData = this
 
         val shape = PolygonShape()
         shape.setAsBox(
