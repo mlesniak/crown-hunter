@@ -15,15 +15,15 @@ class Player : Entity {
 
     private lateinit var body: Body
 
-    constructor(world: World, texture: String, x: Float, y: Float, type: BodyDef.BodyType) {
+    constructor(world: World, texture: String, x: Float, y: Float, type: BodyDef.BodyType, width: Float) {
         sprite = Texture(Gdx.files.internal(texture))
 
         dimension = Rectangle()
 
         dimension.x = x
         dimension.y = y
-        dimension.width = 32f
-        dimension.height = 32f
+        dimension.width = width
+        dimension.height = width
 
         val bodyDef = BodyDef()
         bodyDef.type = type
@@ -40,13 +40,17 @@ class Player : Entity {
         bodyFixture.shape = shape
         bodyFixture.density = 1f
         bodyFixture.restitution = 0f
-        bodyFixture.friction = 1f
+
+        bodyFixture.friction = when (type) {
+            BodyDef.BodyType.DynamicBody -> 0.2f
+            else -> 1f
+        }
         body.createFixture(bodyFixture)
         shape.dispose()
     }
 
     override fun render(batch: SpriteBatch) {
-        batch.draw(sprite, dimension.x - dimension.width/2, dimension.y - dimension.height/2)
+        batch.draw(sprite, dimension.x - dimension.width/2, dimension.y - dimension.height/2, dimension.width, dimension.height)
     }
 
     override fun update() {
