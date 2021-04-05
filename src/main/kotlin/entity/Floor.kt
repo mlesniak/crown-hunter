@@ -1,3 +1,9 @@
+package entity
+
+import Config
+import GameWorld
+import Position
+import Size
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.graphics.Texture

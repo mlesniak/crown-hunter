@@ -1,3 +1,5 @@
+package entity
+
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 
 open class Entity {
