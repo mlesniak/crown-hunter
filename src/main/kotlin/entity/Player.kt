@@ -16,8 +16,8 @@ import com.badlogic.gdx.physics.box2d.PolygonShape
 import com.badlogic.gdx.physics.box2d.World
 
 class Player : Entity {
-    val imageWidth = 32
-    val imageHeight = 32
+    private val imageWidth = 32
+    private val imageHeight = 32
 
     private var tick = 0
     private var tickDirection = 1
