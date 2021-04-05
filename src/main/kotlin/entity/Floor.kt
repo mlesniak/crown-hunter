@@ -5,7 +5,6 @@ import GameWorld
 import Position
 import Size
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.Input
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.physics.box2d.BodyDef
@@ -56,11 +55,5 @@ class Floor : Entity {
             size.width,
             size.height
         )
-    }
-
-    override fun update() {
-        if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
-            Gdx.app.exit()
-        }
     }
 }
