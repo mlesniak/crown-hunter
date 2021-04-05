@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.utils.ScreenUtils
 import entity.Floor
+import entity.Platform
 import entity.Player
 
 fun main() {
@@ -29,6 +30,9 @@ class Game : ApplicationAdapter() {
         // Setup world and add all objects.
         val world = GameWorld.world
         Floor(world)
+        Platform(world, Position(150f, 150f))
+        Platform(world, Position(250f, 250f))
+        Platform(world, Position(650f, 250f))
         Player(world)
     }
 
