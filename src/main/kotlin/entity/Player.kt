@@ -8,6 +8,7 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.physics.box2d.Body
 import com.badlogic.gdx.physics.box2d.BodyDef
 import com.badlogic.gdx.physics.box2d.FixtureDef
@@ -15,7 +16,12 @@ import com.badlogic.gdx.physics.box2d.PolygonShape
 import com.badlogic.gdx.physics.box2d.World
 
 class Player : Entity {
-    private var sprite: Texture
+    val imageWidth = 32
+    val imageHeight = 32
+
+    private var tick = 0
+    private val maxTick: Int
+    private val sprites: Array<TextureRegion>
 
     private val position: Position
     private val size: Size
@@ -48,12 +54,19 @@ class Player : Entity {
         body.createFixture(bodyFixture)
         shape.dispose()
 
-        sprite = Texture(Gdx.files.internal("assets/player.png"))
+        // Load animation phases
+        val image = Texture(Gdx.files.internal("assets/player-animation.png"))
+        maxTick = image.width / imageWidth
+
+        sprites = Array(maxTick) { index ->
+            println(index)
+            TextureRegion(image, index * imageWidth, 0, imageWidth, imageHeight)
+        }
     }
 
     override fun render(batch: SpriteBatch) {
         batch.draw(
-            sprite,
+            sprites[tick],
             position.x - size.width / 2,
             position.y - size.height / 2,
             size.width,
@@ -66,6 +79,11 @@ class Player : Entity {
         position.y = body.position.y * GameWorld.PIXEL_TO_METER
 
         handleInput()
+
+        tick++
+        if (tick == maxTick) {
+            tick = 0
+        }
     }
 
     private fun handleInput() {
