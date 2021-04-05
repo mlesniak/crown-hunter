@@ -24,9 +24,7 @@ class Game : ApplicationAdapter() {
         // Setup world and add all objects.
         val world = GameWorld.world
         Floor(world)
-        Platform(world, Position(150f, 150f))
-        Platform(world, Position(250f, 250f))
-        Platform(world, Position(650f, 250f))
+        Platform(world, Position(150f, 100f))
         Player(world)
     }
 

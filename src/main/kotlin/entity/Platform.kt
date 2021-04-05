@@ -39,6 +39,7 @@ class Platform : Entity {
         val bodyFixture = FixtureDef()
         bodyFixture.shape = shape
         bodyFixture.density = 1f
+        bodyFixture.friction = 0.2f
         bodyFixture.restitution = 0f
         body.createFixture(bodyFixture)
         shape.dispose()

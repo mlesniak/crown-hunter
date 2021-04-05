@@ -55,7 +55,7 @@ class Player : Entity {
         bodyFixture.shape = shape
         bodyFixture.density = 1f
         bodyFixture.restitution = 0f
-        bodyFixture.friction = 0.8f
+        bodyFixture.friction = 0.9f
         body.createFixture(bodyFixture)
         shape.dispose()
 
