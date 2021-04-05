@@ -2,39 +2,28 @@ import com.badlogic.gdx.ApplicationListener
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Matrix4
-import com.badlogic.gdx.physics.box2d.BodyDef
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer
-import com.badlogic.gdx.physics.box2d.EdgeShape
-import com.badlogic.gdx.physics.box2d.FixtureDef
 import com.badlogic.gdx.utils.ScreenUtils
 
 class Game : ApplicationListener {
     private lateinit var camera: OrthographicCamera
     private lateinit var batch: SpriteBatch
 
-    var debugRenderer: Box2DDebugRenderer? = null
-    var debugMatrix: Matrix4? = null
+    // Allows to show Box2D models without textures.
+    private var debugEnabled = false
+    private var debugRenderer: Box2DDebugRenderer? = null
+    private var debugMatrix: Matrix4? = null
 
     override fun create() {
         camera = OrthographicCamera()
-        camera.setToOrtho(false, 800f, 600f) // TODO(mlesniak) config object with screen width and height
+        camera.setToOrtho(false, Config.width.toFloat(), Config.height.toFloat())
         batch = SpriteBatch()
-
-        // Add floor
-        val floor = BodyDef()
-        floor.type = BodyDef.BodyType.StaticBody
-        floor.position.set(400f / GameWorld.PIXEL_TO_METER, 0f / GameWorld.PIXEL_TO_METER)
-        val floorBody = GameWorld.world.createBody(floor)
-        val floorShape = EdgeShape()
-        floorShape.set(-10000f, 0f, 10000f, 0f)
-        val floorFixture = FixtureDef()
-        floorFixture.shape = floorShape
-        floorBody.createFixture(floorFixture)
-        floorShape.dispose()
 
         debugMatrix = Matrix4(camera.combined)
         debugMatrix!!.scale(GameWorld.PIXEL_TO_METER, GameWorld.PIXEL_TO_METER, 1f)
         debugRenderer = Box2DDebugRenderer()
+
+        // TODO(mlesniak) Initialize GameWorld
     }
 
     override fun render() {
@@ -45,8 +34,11 @@ class Game : ApplicationListener {
         camera.update()
         batch.projectionMatrix = camera.combined
         batch.begin()
-        // debugRenderer!!.render(world, debugMatrix);
-        GameWorld.render(batch)
+        if (debugEnabled) {
+            debugRenderer!!.render(GameWorld.world, debugMatrix);
+        } else {
+            GameWorld.render(batch)
+        }
         batch.end()
     }
 

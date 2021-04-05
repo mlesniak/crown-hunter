@@ -1,3 +1,2 @@
-import com.badlogic.gdx.math.Vector2
-
-typealias Position = Vector2
+data class Position(var x: Float, var y: Float)
+data class Size(val width: Float, val height: Float)
