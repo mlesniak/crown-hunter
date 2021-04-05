@@ -21,6 +21,7 @@ class Player : Entity {
 
     private var tick = 0
     private val maxTick: Int
+    private var tickCounter: Int = 0
     private val sprites: Array<TextureRegion>
 
     private val position: Position
@@ -55,12 +56,10 @@ class Player : Entity {
         shape.dispose()
 
         // Load animation phases
-        val image = Texture(Gdx.files.internal("assets/player-animation.png"))
-        maxTick = image.width / imageWidth
-
+        val spritesheet = Texture(Gdx.files.internal("assets/player-animation.png"))
+        maxTick = spritesheet.width / imageWidth
         sprites = Array(maxTick) { index ->
-            println(index)
-            TextureRegion(image, index * imageWidth, 0, imageWidth, imageHeight)
+            TextureRegion(spritesheet, index * imageWidth, 0, imageWidth, imageHeight)
         }
     }
 
@@ -80,9 +79,15 @@ class Player : Entity {
 
         handleInput()
 
-        tick++
-        if (tick == maxTick) {
-            tick = 0
+        // Animation support.
+
+        tickCounter++
+        if (tickCounter > 5) {
+            tickCounter = 0
+            tick++
+            if (tick == maxTick) {
+                tick = 0
+            }
         }
     }
 
