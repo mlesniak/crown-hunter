@@ -20,6 +20,7 @@ class Player : Entity {
     val imageHeight = 32
 
     private var tick = 0
+    private var tickDirection = 1
     private val maxTick: Int
     private var tickCounter: Int = 0
     private val sprites: Array<TextureRegion>
@@ -80,13 +81,17 @@ class Player : Entity {
         handleInput()
 
         // Animation support.
-
         tickCounter++
         if (tickCounter > 5) {
             tickCounter = 0
-            tick++
+            tick += tickDirection
             if (tick == maxTick) {
+                tick--
+                tickDirection = -1
+            }
+            if (tick == -1) {
                 tick = 0
+                tickDirection = 1
             }
         }
     }
