@@ -79,6 +79,7 @@ class Player : Entity {
         position.y = body.position.y * GameWorld.PIXEL_TO_METER
 
         handleInput()
+        handleControl()
 
         // Animation support.
         tickCounter++
@@ -124,7 +125,9 @@ class Player : Entity {
         if (body.position.x * GameWorld.PIXEL_TO_METER > Gdx.graphics.width) {
             body.setTransform(0f, body.position.y, 0f)
         }
+    }
 
+    private fun handleControl() {
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
             Gdx.app.exit()
         }
