@@ -6,7 +6,9 @@ import Position
 import Size
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.Texture
+import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.physics.box2d.Body
@@ -16,6 +18,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape
 import com.badlogic.gdx.physics.box2d.World
 
 class Player : Entity {
+    private var font: BitmapFont
     private val imageWidth = 32
     private val imageHeight = 32
 
@@ -57,11 +60,14 @@ class Player : Entity {
         shape.dispose()
 
         // Load animation phases
-        val spritesheet = Texture(Gdx.files.internal("assets/player-animation.png"))
-        maxTick = spritesheet.width / imageWidth
+        val spriteSheet = Texture(Gdx.files.internal("assets/player-animation.png"))
+        maxTick = spriteSheet.width / imageWidth
         sprites = Array(maxTick) { index ->
-            TextureRegion(spritesheet, index * imageWidth, 0, imageWidth, imageHeight)
+            TextureRegion(spriteSheet, index * imageWidth, 0, imageWidth, imageHeight)
         }
+
+        font = BitmapFont()
+        font.color = Color.WHITE
     }
 
     override fun render(batch: SpriteBatch) {
@@ -72,6 +78,10 @@ class Player : Entity {
             size.width,
             size.height
         )
+
+        // Add debug information.
+        // val ys = "%3.2f".format(body.linearVelocity.y)
+        // font.draw(batch, "${ys}", 10f, Config.height - 20f)
     }
 
     override fun update() {
@@ -83,8 +93,7 @@ class Player : Entity {
 
         // Animation support.
         tickCounter++
-        if (tickCounter > 5) {
-            tickCounter = 0
+        if (tickCounter % 5 == 0) {
             tick += tickDirection
             if (tick == maxTick) {
                 tick--
