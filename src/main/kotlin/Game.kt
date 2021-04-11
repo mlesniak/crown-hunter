@@ -4,6 +4,7 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplication
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.utils.ScreenUtils
+import entity.Dog
 import entity.Floor
 import entity.Platform
 import entity.Player
@@ -25,6 +26,7 @@ class Game : ApplicationAdapter() {
         val world = GameWorld.world
         Floor(world)
         Platform(world, Position(150f, 100f))
+        Dog(world)
         Player(world)
     }
 
