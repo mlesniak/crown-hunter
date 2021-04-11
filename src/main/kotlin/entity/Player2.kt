@@ -17,10 +17,10 @@ import com.badlogic.gdx.physics.box2d.FixtureDef
 import com.badlogic.gdx.physics.box2d.PolygonShape
 import com.badlogic.gdx.physics.box2d.World
 
-class Dog : Entity {
+class Player2 : Entity {
     private var font: BitmapFont
-    private val imageWidth =256
-    private val imageHeight = 256
+    private val imageWidth = 32
+    private val imageHeight = 32
 
     private var tick = 0
     private var tickDirection = 1
@@ -33,12 +33,12 @@ class Dog : Entity {
     private val body: Body
 
     constructor(world: World) {
-        position = Position(Config.width.toFloat() - 80f, 20f)
-        size = Size(60f, 60f)
+        position = Position(Config.width.toFloat() / 2 + 80, 100f)
+        size = Size(80f, 80f)
 
         // Define the body position and size.
         val bodyDef = BodyDef()
-        bodyDef.type = BodyDef.BodyType.StaticBody
+        bodyDef.type = BodyDef.BodyType.DynamicBody
         bodyDef.position.set(position.x / GameWorld.PIXEL_TO_METER, position.y / GameWorld.PIXEL_TO_METER)
         body = world.createBody(bodyDef)
         body.userData = this
@@ -60,7 +60,7 @@ class Dog : Entity {
         shape.dispose()
 
         // Load animation phases
-        val spriteSheet = Texture(Gdx.files.internal("assets/suki.png"))
+        val spriteSheet = Texture(Gdx.files.internal("assets/player2-animation.png"))
         maxTick = spriteSheet.width / imageWidth
         sprites = Array(maxTick) { index ->
             TextureRegion(spriteSheet, index * imageWidth, 0, imageWidth, imageHeight)
@@ -109,18 +109,18 @@ class Dog : Entity {
     private fun handleInput() {
         val velocity = body.linearVelocity
         var pressed = false
-        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
             val y = body.position.y * GameWorld.PIXEL_TO_METER
             if (velocity.y < 0.001) {
                 velocity.y += 20f
                 pressed = true
             }
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.D)) {
             velocity.x += 1f
             pressed = true
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.A)) {
             velocity.x -= 1f
             pressed = true
         }

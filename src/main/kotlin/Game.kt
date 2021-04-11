@@ -8,6 +8,7 @@ import entity.Dog
 import entity.Floor
 import entity.Platform
 import entity.Player
+import entity.Player2
 
 fun main() {
     LwjglApplication(Game(), Config)
@@ -28,6 +29,7 @@ class Game : ApplicationAdapter() {
         Platform(world, Position(150f, 100f))
         Dog(world)
         Player(world)
+        Player2(world)
     }
 
     override fun render() {
